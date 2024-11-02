@@ -1,17 +1,18 @@
 import User from "../models/user.js";
+import jwt from 'jsonwebtoken';
 
 export const createUser = async (req, res) => {
-    const user  = req.body;
+    const { username, email, password } = req.body;
     
-    if(!user.username || !user.password || !user.email) {
-        res.status(400).json({message: "Fill all the fileds"})
+    if(!username || !email || !password) {
+       return res.status(400).json({message: "Fill all the fileds"})
     }
 
-    const newUser = new User(user);
+    const newUser = new User({ username, email, password });
 
     try {
         await newUser.save();
-        res.status(200).json({success: true, data: newUser});
+        res.status(200).json({success: true, message: "Saved successfully!"});
     } catch (error) {
         console.error("error creating user", error.message);
         res.status(500).json({message: "Server error"});
@@ -42,3 +43,46 @@ export const deleteUser = async (req, res)=> {
         
     }
 };
+
+
+export const loginUser = async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        // Find user by username
+        const user = await User.findOne({ username });
+
+        // Check if user exists and the password matches
+        if (!user || user.password !== password) {  // Plain text comparison
+            return res.status(401).json({ error: "Invalid credentials" });
+        }
+
+        // Generate a JWT token with the user's ID and type
+        const token = jwt.sign({ id: user._id, type: user.type }, 'ourpro123', { expiresIn: '2h' });
+
+        // Send the token and role as response
+        res.status(200).json({ token, role: user.type });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+
+export const getUserRole = async (req, res) => {
+    // const user = req.body;
+    try {
+        const userId = req.user.id;
+        const user = await User.findById(userId).select("type");
+
+        if (!user){
+            return res.status(404).json({error: "User not found"});
+        }
+
+        res.status(200).json({role: user.type});
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({message: "Server error"});
+        
+    }
+}

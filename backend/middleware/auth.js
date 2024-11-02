@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken";
 
-export function authenticate  (req, res, next) {
-    const token = req.Headers['authorization']?.split(' ')[1];
+export const authenticate  = (req, res, next) => {
+    const token = req.headers['authorization']?.split(' ')[1];
     if(!token)  return res.status(401).json({ message: 'Access denied' });
 
-    jwt.verify(token, (err, user) => {
+    jwt.verify(token,'ourpro123', (err, user) => {
         if (err) return res.status(401).json({message: "Invalid token"});
         req.user = user;
         next();
@@ -14,7 +14,7 @@ export function authenticate  (req, res, next) {
 export function authorize(type) {
     return (req, res, next) => {
         if (req.user.type !== type) {
-            return res.status(401).json({message: "Access denied"});
+            return res.status(403).json({message: "Access denied"});
         }
         next();
     }

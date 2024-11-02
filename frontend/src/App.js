@@ -1,6 +1,7 @@
 // src/App.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import axios from 'axios';
 import AdminSidebar from './components/Admin/Sidebar';
 import OfficerSidebar from './components/Officer/Sidebar';
 import AdminDashboard from './pages/Admin/AdminDashboard';
@@ -16,27 +17,72 @@ import OfficerIncidentDetail from './pages/Officer/OfficerIncidentDetail';
 import Users from './pages/Admin/Users';
 import LoginForm from './pages/Login';
 import SignupForm from './pages/Signup';
-import ReportIncident from './pages/ReportIncident'; // Import the Report Incident component
-
-const userRole = 'admin'; 
+import ReportIncident from './pages/ReportIncident';
 
 function App() {
+  const [userRole, setUserRole] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const handleLoginSuccess = (role) => {
+    setUserRole(role);
+    setIsAuthenticated(true);
+  };
+  
+
+  const handleLogout = () => {
+    // Clear the token from localStorage and reset authentication state
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+    setUserRole(null);
+    Navigate('/login');
+  };
+
+  useEffect(() => {
+    // Check if user is logged in by checking token
+    const token = localStorage.getItem('token');
+    if (token) {
+      const fetchUserRole = async () => {
+        try {
+          const response = await axios.get('http://localhost:5000/api/users/role', {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          setUserRole(response.data.role);
+          setIsAuthenticated(true);
+        } catch (error) {
+          console.error('Error fetching user role:', error);
+          setIsAuthenticated(false);
+        }
+      };
+      fetchUserRole();
+    }
+  }, []);
+
+  if (!isAuthenticated) {
+    // If not authenticated, allow access to login and signup pages
+    return (
+      <Router>
+        <Routes>
+          <Route path="/login" element={<LoginForm onLoginSuccess={handleLoginSuccess} />} />
+          <Route path="/signup" element={<SignupForm />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </Router>
+    );
+  }
+
   return (
     <Router>
       <div className="flex min-h-screen bg-gray-100">
-        {userRole === 'admin' ? <AdminSidebar /> : userRole === 'officer' ? <OfficerSidebar /> : null}
+        {/* Conditionally render the sidebar based on user role */}
+        {userRole === 'admin' && <AdminSidebar onLogout={handleLogout}/>}
+        {userRole === 'officer' && <OfficerSidebar />}
 
-        <main className={`flex-1 p-6 ${userRole ? '' : 'flex items-center justify-center'}`}>
+        <main className={`flex-1 p-6`}>
           <Routes>
-            {/* Authentication Routes */}
-            <Route path="/login" element={<LoginForm />} />
-            <Route path="/signup" element={<SignupForm />} />
-            <Route path="/report-incident" element={<ReportIncident />} /> {/* Add the Report Incident route */}
-
             {/* Admin Routes */}
             {userRole === 'admin' && (
               <>
-                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="/admin/incidents" element={<IncidentsList />} />
                 <Route path="/admin/users" element={<Users />} />
                 <Route path="/admin/incidents/:id" element={<IncidentDetail />} />
@@ -47,19 +93,17 @@ function App() {
             {/* Officer Routes */}
             {userRole === 'officer' && (
               <>
-                          {/* Pending incident */}
                 <Route path="/officer" element={<OfficerDashboard />} />
                 <Route path="/officer/incidents/:id" element={<OfficerIncidentDetail />} />
-                              {/* Progress incident */}
                 <Route path="/progress" element={<ProgressIncident />} />
                 <Route path="/progress/progress/:id" element={<ProgressIncidentDetail />} />
-                              {/* Resolved incident */}
                 <Route path="/resolved" element={<ResolvedIncident />} />
                 <Route path="/resolved/resolved/:id" element={<ResolvedIncidentDetail />} />
               </>
             )}
 
-            {!userRole && <Route path="*" element={<Navigate to="/login" replace />} />}
+            {/* Redirect to appropriate dashboard based on user role */}
+            <Route path="*" element={<Navigate to={userRole === 'admin' ? "/admin/dashboard" : "/officer"} replace />} />
           </Routes>
         </main>
       </div>

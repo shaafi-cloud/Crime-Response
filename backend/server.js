@@ -4,25 +4,28 @@ import connectDB from "./config/db.js";
 import userRoute from "./routes/user.js";
 import incidentRouter from "./routes/incident.js";
 import assignedRouter from "./routes/assignedIncident.js";
+import cors from 'cors';
 import { authenticate, authorize } from './middleware/auth.js';
 import bodyParser from "body-parser";
 
 dotenv.config();
 
+
 const app = express();
+app.use(cors());
 // app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.json());
 
-app.use("/users", userRoute);
-app.use("/incident", incidentRouter);
-app.use("/incidetAss", assignedRouter);
+app.use("/api/users", userRoute);
+app.use("/api/incident", incidentRouter);
+app.use("/api/incidetAss", assignedRouter);
 
-const port = 3000;
+const port = 5000;
 connectDB();
 
-app.get("/", (req, res) => {
-    res.send("welcome, user!");
-});
+// app.get("/", (req, res) => {
+//     res.send("hello world");
+// });
 
 
  
