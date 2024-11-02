@@ -1,6 +1,6 @@
-import AssignIncident from "../models/assignedIncident";
-import Incident from "../models/incident";
-import User from "../models/user";
+import AssignIncident from "../models/assignedIncident.js";
+import Incident from "../models/incident.js";
+import User from "../models/user.js";
 
 export const assignIncident = async (req, res) => {
     const { officerId, incidentId, status, priority } = req.body;

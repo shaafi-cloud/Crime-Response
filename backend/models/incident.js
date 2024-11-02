@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 const incidentSchema = new mongoose.Schema({
-    _id: { type: Number, required: true, unique: true},
     typeOfIncident: { type: String, required: true },
     date: { type: Date, required: true },
     description: { type: String, required: true },

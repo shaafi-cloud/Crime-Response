@@ -1,4 +1,4 @@
-import Incident from "../models/incident";
+import Incident from "../models/incident.js";
 
 export const createIncident = async (req, res) => {
     const incident = req.body;

@@ -1,9 +1,9 @@
-import User from "../models/user";
+import User from "../models/user.js";
 
 export const createUser = async (req, res) => {
-    const user = req.body;
+    const user  = req.body;
     
-    if(!user._id || !user.username || !user.password || !user.email) {
+    if(!user.username || !user.password || !user.email) {
         res.status(400).json({message: "Fill all the fileds"})
     }
 

@@ -1,8 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import Incident from '../models/incident';
-import User from '../models/user';
-import { createIncident, getIncident, updateIncident } from '../controllers/incidents';
+import Incident from '../models/incident.js';
+import User from '../models/user.js';
+import { createIncident, getIncident, updateIncident } from '../controllers/incidents.js';
 const router = express.Router();
 
 

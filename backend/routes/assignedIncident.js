@@ -1,9 +1,9 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import AssignIncident from '../models/assignedIncident';
-import User from '../models/user';
-import Incident from '../models/incident';
-import { assignIncident, getAllassigned } from '../controllers/assignedIncidents';
+import AssignIncident from '../models/assignedIncident.js';
+import User from '../models/user.js';
+import Incident from '../models/incident.js';
+import { assignIncident, getAllassigned } from '../controllers/assignedIncidents.js';
 
 const router = express.Router();
 
