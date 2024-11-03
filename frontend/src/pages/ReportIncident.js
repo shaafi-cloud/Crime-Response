@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 function ReportIncident() {
+  
   // State to control the visibility of witness fields
   const [isNotBystander, setIsNotBystander] = useState(false);
 

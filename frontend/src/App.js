@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import axios from 'axios';
@@ -27,7 +26,6 @@ function App() {
     setUserRole(role);
     setIsAuthenticated(true);
   };
-  
 
   const handleLogout = () => {
     // Clear the token from localStorage and reset authentication state
@@ -74,10 +72,10 @@ function App() {
     <Router>
       <div className="flex min-h-screen bg-gray-100">
         {/* Conditionally render the sidebar based on user role */}
-        {userRole === 'admin' && <AdminSidebar onLogout={handleLogout}/>}
+        {userRole === 'admin' && <AdminSidebar onLogout={handleLogout} />}
         {userRole === 'officer' && <OfficerSidebar />}
 
-        <main className={`flex-1 p-6`}>
+        <main className="flex-1 p-6">
           <Routes>
             {/* Admin Routes */}
             {userRole === 'admin' && (
@@ -102,8 +100,22 @@ function App() {
               </>
             )}
 
+            {/* User Role: Redirect to ReportIncident */}
+            {userRole === 'user' && (
+              <Route path="/report-incident" element={<ReportIncident />} />
+            )}
+
             {/* Redirect to appropriate dashboard based on user role */}
-            <Route path="*" element={<Navigate to={userRole === 'admin' ? "/admin/dashboard" : "/officer"} replace />} />
+            <Route
+              path="*"
+              element={
+                userRole === 'admin'
+                  ? <Navigate to="/admin/dashboard" replace />
+                  : userRole === 'officer'
+                  ? <Navigate to="/officer" replace />
+                  : <Navigate to="/report-incident" replace />
+              }
+            />
           </Routes>
         </main>
       </div>
