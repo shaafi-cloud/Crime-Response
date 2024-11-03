@@ -2,24 +2,27 @@ import User from "../models/user.js";
 import jwt from 'jsonwebtoken';
 
 export const createUser = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, email, password, type } = req.body; // Include type here
     
-    if(!username || !email || !password) {
-       return res.status(400).json({message: "Fill all the fileds"})
+    // Check for required fields
+    if (!username || !email || !password) {
+        return res.status(400).json({ message: "Fill all the fields" });
     }
 
-    const newUser = new User({ username, email, password });
+    // Use a default value for type if it's not provided
+    const userType = type ? type : 'user'; // Default to 'user' if type is not provided
+
+    const newUser = new User({ username, email, password, type: userType }); // Include type in the user object
 
     try {
         await newUser.save();
-        res.status(200).json({success: true, message: "Saved successfully!"});
+        res.status(200).json({ success: true, message: "Saved successfully!" });
     } catch (error) {
         console.error("error creating user", error.message);
-        res.status(500).json({message: "Server error"});
-        
+        res.status(500).json({ message: "Server error" });
     }
-
 };
+
 
 export const getUsers =  async (req, res) => {
     try {

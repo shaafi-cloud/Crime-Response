@@ -1,21 +1,35 @@
-// src/pages/RegisterOfficer.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function RegisterOfficer() {
-  const [name, setName] = useState('');
+  const [username, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState(''); // New password state
+  const [password, setPassword] = useState('');
+  const [type, setType] = useState('Officer'); // Default value for type is 'Officer'
   const navigate = useNavigate();
 
-  const handleRegister = () => {
-    // In a real application, this data would be sent to the backend to create the user
-    const newOfficer = { name, email, password, role: 'Officer' };
-    console.log('Registering officer:', newOfficer);
-    alert(`New officer registered: ${name}`);
+  const handleRegister = async (e) => {
+    e.preventDefault();
     
-    // Redirect to Users page after registration
-    navigate('/users');
+    // If type is empty, set it to 'Officer'
+    const finalType = type.trim() === '' ? 'Officer' : type;
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/users/add', {
+        username,
+        email,
+        password,
+        type: finalType, // Send the determined type
+      });
+      if (response.data.success) {
+        alert(`New officer registered: ${username}`);
+        navigate('/users'); // Redirect to Users page after successful registration
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      alert('Failed to register officer. Please try again.'); // Optional: Inform the user of the error
+    }
   };
 
   return (
@@ -26,7 +40,7 @@ function RegisterOfficer() {
         type="text"
         placeholder="Name"
         className="border p-2 rounded mb-2 w-full"
-        value={name}
+        value={username}
         onChange={(e) => setName(e.target.value)}
       />
       <input
@@ -44,10 +58,15 @@ function RegisterOfficer() {
         onChange={(e) => setPassword(e.target.value)}
       />
       
-      {/* Fixed "Officer" role */}
-      <div className="border p-2 rounded mb-4 w-full bg-gray-100">
-        Officer
-      </div>
+      {/* Input for type with default value */}
+      <input
+        type="text"
+        placeholder=" Officer"
+        value={type}
+        className="border p-2 rounded mb-4 w-full"
+        readOnly
+        onChange={(e) => setType(e.target.value)}
+      />
 
       <button onClick={handleRegister} className="bg-blue-500 text-white px-4 py-2 rounded">
         Register Officer
