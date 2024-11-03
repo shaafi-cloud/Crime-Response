@@ -24,7 +24,7 @@ function AdminSidebar( {onLogout}) {
       </li>
       <li className="mb-2">
         <NavLink 
-          to="/admin_incidents" 
+          to="/admin/incidents" 
           className={({ isActive }) => 
             `block py-2 px-4 rounded text-lg flex items-center 
             ${isActive ? 'bg-blue-500' : 'hover:bg-gray-700'}`
@@ -37,7 +37,7 @@ function AdminSidebar( {onLogout}) {
 
       <li className="mb-2">
         <NavLink 
-          to="/admin_users" 
+          to="/admin/users" 
           className={({ isActive }) => 
             `block py-2 px-4 rounded text-lg flex items-center 
             ${isActive ? 'bg-blue-500' : 'hover:bg-gray-700'}`

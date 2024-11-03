@@ -1,9 +1,20 @@
 // src/pages/ReportIncident.js
 import React, { useState } from 'react';
+import axios from 'axios';
 
 function ReportIncident() {
   // State to control the visibility of witness fields
   const [isNotBystander, setIsNotBystander] = useState(false);
+
+  // const handleReport = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await axios.post("http://localhost:5000/api/incident/add")
+  //   } catch (error) {
+      
+  //   }zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+  // }
+
 
   return (
     <div className="max-w-5xl mx-auto mt-10 p-8 bg-white shadow-lg rounded-lg">
