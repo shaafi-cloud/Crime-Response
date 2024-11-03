@@ -44,7 +44,7 @@ function AssignIncident() {
         Confirm Assignment
       </button>
 
-      <Link to={`/incidents/${id}`} className="mt-4 inline-block text-blue-500">
+      <Link to={`/admin/incidents/:id`} className="mt-4 inline-block text-blue-500">
         Back to Incident Details
       </Link>
     </div>

@@ -17,6 +17,7 @@ import Users from './pages/Admin/Users';
 import LoginForm from './pages/Login';
 import SignupForm from './pages/Signup';
 import ReportIncident from './pages/ReportIncident';
+import AssignIncident from './pages/Admin/AssignIncident';
 
 function App() {
   const [userRole, setUserRole] = useState(null);
@@ -85,6 +86,7 @@ function App() {
                 <Route path="/admin/users" element={<Users />} />
                 <Route path="/admin/incidents/:id" element={<IncidentDetail />} />
                 <Route path="/admin/register-officer" element={<RegisterOfficer />} />
+                <Route path="/admin/assignIncident" element={<AssignIncident />} />
               </>
             )}
 

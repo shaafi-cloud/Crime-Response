@@ -25,7 +25,7 @@ function AdminDashboard() {
           <img src="" alt="Admin Avatar" className="w-10 h-10 rounded-full ml-4" /> */}
         </div>
       {/* </header> */}
-      <h1 className="text-2xl font-bold mb-4">Dashboard Overview</h1>
+      <h1 className="text-2xl font-bold mb-4 ">Dashboard Overview</h1>
 
       <div className="p-6 bg-white shadow-md rounded-md">
         <div className="grid grid-cols-3 gap-4">

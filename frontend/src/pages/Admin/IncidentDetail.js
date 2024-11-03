@@ -72,14 +72,13 @@ function IncidentDetail() {
       </table>
 
       {/* Button to navigate to AssignIncident page */}
-      <button 
-        onClick={handleAssignClick} 
-        className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
-      >
-        Assign to Officer
-      </button>
+      <Link to="/admin/assignIncident">
+  <button className="bg-blue-500 text-white px-4 py-2 rounded mb-4">
+    Assign to Officer
+  </button>
+</Link>
 
-      <Link to="/incidents" className="inline-block text-blue-500">
+      <Link to="/admin/incidents" className="inline-block text-blue-500">
         Back to Incidents List
       </Link>
     </div>
