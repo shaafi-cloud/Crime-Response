@@ -74,7 +74,7 @@ function App() {
       <div className="flex min-h-screen bg-gray-100">
         {/* Conditionally render the sidebar based on user role */}
         {userRole === 'admin' && <AdminSidebar onLogout={handleLogout} />}
-        {userRole === 'officer' && <OfficerSidebar />}
+        {userRole === 'Officer' && <OfficerSidebar />}
 
         <main className="flex-1 p-6">
           <Routes>

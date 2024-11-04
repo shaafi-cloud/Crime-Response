@@ -73,7 +73,7 @@ const Users = () => {
         <p className="text-red-500">{error}</p> // Display error message
       ) : (
         <>
-          <h2 className="text-xl font-bold mt-6 mb-4">Users List</h2>
+          {/* <h2 className="text-xl font-bold mt-6 mb-4">Users List</h2> */}
           <table className="w-full border-collapse mb-4">
             <thead>
               <tr>
