@@ -3,8 +3,9 @@ import "font-awesome/css/font-awesome.min.css";
 import { NavLink } from "react-router-dom";
 import { TbProgressDown } from "react-icons/tb";
 import { FaRegCheckSquare, FaEdit } from "react-icons/fa";
+import { FaUserFriends, FaListAlt, FaSignOutAlt } from 'react-icons/fa';
 
-function OfficerSidebar() {
+function OfficerSidebar({onLogout}) {
   return (
     <aside className="w-64 bg-white text-gray-600 font-sans">
       <div className="flex items-center justify-center mt-8 mb-4">
@@ -47,6 +48,13 @@ function OfficerSidebar() {
             </NavLink>
           </li>
         </ul>
+        <button
+          onClick={onLogout}
+          className="flex items-center w-full py-2 px-4 mt-6 text-lg text-gray-600 hover:text-purple-700"
+        >
+          <FaSignOutAlt className="mr-2 text-xl" />
+          Logout
+        </button>
       </nav>
     </aside>
   );
