@@ -45,6 +45,7 @@ function App() {
           const response = await axios.get('http://localhost:5000/api/users/role', {
             headers: { Authorization: `Bearer ${token}` }
           });
+          console.log("the session id: ",response.data.role );
           setUserRole(response.data.role);
           setIsAuthenticated(true);
         } catch (error) {
@@ -74,7 +75,7 @@ function App() {
       <div className="flex min-h-screen bg-gray-100">
         {/* Conditionally render the sidebar based on user role */}
         {userRole === 'admin' && <AdminSidebar onLogout={handleLogout} />}
-        {userRole === 'Officer' && <OfficerSidebar />}
+        {userRole === 'officer' && <OfficerSidebar />}
 
         <main className="flex-1 p-6">
           <Routes>
@@ -91,7 +92,7 @@ function App() {
             )}
 
             {/* Officer Routes */}
-            {userRole === 'Officer' && (
+            {userRole === 'officer' && (
               <>
                 <Route path="/officer" element={<OfficerDashboard />} />
                 <Route path="/officer/incidents/:id" element={<OfficerIncidentDetail />} />
