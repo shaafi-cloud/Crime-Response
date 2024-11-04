@@ -31,7 +31,7 @@ export const assignIncident = async (req, res) => {
 };
 
 export const getAllassigned = async (req, res) => {
-    const { officerId } = req.params;
+    const  officerId  = req.params.id;
     if (!mongoose.Types.ObjectId.isValid(officerId)){
         return res.status(400).json({ error: 'Invalid officer ID.' });
 
@@ -41,7 +41,7 @@ export const getAllassigned = async (req, res) => {
         if(assignedIncidents.length === 0){
             return res.status(404).json({message: "No incidents assigned yet"})
         }
-        res.json(assignedIncidents)
+        res.status(200).json({data: assignedIncidents});
     } catch (error) {
         res.status(500).json({error: error.message});
     }

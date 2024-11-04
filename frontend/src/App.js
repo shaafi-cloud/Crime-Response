@@ -45,6 +45,7 @@ function App() {
           const response = await axios.get('http://localhost:5000/api/users/role', {
             headers: { Authorization: `Bearer ${token}` }
           });
+          console.log("the session id: ",response.data.role );
           setUserRole(response.data.role);
           setIsAuthenticated(true);
         } catch (error) {

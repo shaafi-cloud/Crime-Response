@@ -55,10 +55,10 @@ function OfficerIncidentDetail() {
             <td className="border px-4 py-2 font-semibold">Date</td>
             <td className="border px-4 py-2">2024-10-31</td>
           </tr>
-          <tr>
+          {/* <tr>
             <td className="border px-4 py-2 font-semibold">Admin Notes</td>
             <td className="border px-4 py-2">Check for CCTV footage.</td>
-          </tr>
+          </tr> */}
         </tbody>
       </table>
 

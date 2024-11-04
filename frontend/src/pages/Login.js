@@ -24,7 +24,7 @@ function LoginForm({ onLoginSuccess }) {
       // Redirect based on the user role
       if (role === 'admin') {
         navigate('/admin/dashboard'); 
-      } else if (role === 'officer') {
+      } else if (role === 'Officer') {
         navigate('/officer');
       } else {
         setError('Unauthorized role');

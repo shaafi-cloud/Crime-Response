@@ -28,7 +28,7 @@ function IncidentsList() {
     fetchIncidents(); // Call the function to fetch incidents
   }, []);
 
-  const handleSearchChange = (e) => setSearch(e.target.value.toLowerCase());
+  const handleSearchChange = (e) => setSearch(e.target.value);
 
   const sortedIncidents = incidents
     .filter((incident) => {
