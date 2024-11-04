@@ -1,5 +1,5 @@
 import express from 'express';
-import { createUser, deleteUser, getUserRole, getUsers, loginUser, updateUser } from '../controllers/users.js';
+import { createUser, deleteUser, getUserByType, getUserRole, getUsers, loginUser, updateUser } from '../controllers/users.js';
 import { authenticate, authorize } from '../middleware/auth.js';
 import User from '../models/user.js';
 
@@ -23,7 +23,9 @@ router.get("/role", authenticate, getUserRole);
 router.delete("/:id", deleteUser)
 
 // PUT endpoint to update a user by ID
-router.put('/:id', updateUser)
+router.put('/:id', updateUser);
+
+router.get("/type/:type", getUserByType);
 
 
 

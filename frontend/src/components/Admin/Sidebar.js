@@ -1,10 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import 'font-awesome/css/font-awesome.min.css';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { FaUserFriends, FaListAlt, FaSignOutAlt } from 'react-icons/fa';
 import { RiAdminFill } from "react-icons/ri";
 
 function AdminSidebar({ onLogout }) {
+
+
+  // const handleLogout = () => {
+  //   // Clear the token from localStorage and reset authentication state
+  //   localStorage.removeItem('token');
+  //   setIsAuthenticated(false);
+  //   setUserRole(null);
+  //   navigate('/login');
+  // };
+
   return (
     <aside className="w-64 bg-white text-gray-600 font-sans">
       <div className="flex items-center justify-center mt-8 mb-4 mr-11">

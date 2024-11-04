@@ -18,7 +18,7 @@ app.use(express.json());
 
 app.use("/api/users", userRoute);
 app.use("/api/incident", incidentRouter);
-app.use("/api/incidetAss", assignedRouter);
+app.use("/api/incident/assign", assignedRouter);
 
 const port = 5000;
 connectDB();

@@ -109,3 +109,7 @@ export const getIncidntbyId = async (req, res) => {
       res.status(500).json({ message: 'Failed to fetch incident' });
     }
   };
+
+  export const assignIncident = async (req, res) => {
+    
+  }

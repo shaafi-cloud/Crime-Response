@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AdminSidebar from './components/Admin/Sidebar';
 import OfficerSidebar from './components/Officer/Sidebar';
@@ -33,7 +33,7 @@ function App() {
     localStorage.removeItem('token');
     setIsAuthenticated(false);
     setUserRole(null);
-    Navigate('/login');
+    window.location.href = '/login';
   };
 
   useEffect(() => {
@@ -46,6 +46,7 @@ function App() {
             headers: { Authorization: `Bearer ${token}` }
           });
           console.log("the session id: ",response.data.role );
+          console.log(response.data.role);
           setUserRole(response.data.role);
           setIsAuthenticated(true);
         } catch (error) {
@@ -74,8 +75,8 @@ function App() {
     <Router>
       <div className="flex min-h-screen bg-gray-100">
         {/* Conditionally render the sidebar based on user role */}
-        {userRole === 'admin' && <AdminSidebar onLogout={handleLogout} />}
-        {userRole === 'officer' && <OfficerSidebar />}
+        {userRole === 'admin' && <AdminSidebar onLogout={handleLogout}/>}
+        {userRole === 'Officer' && <OfficerSidebar />}
 
         <main className="flex-1 p-6">
           <Routes>
@@ -87,13 +88,13 @@ function App() {
                 <Route path="/admin/users" element={<Users />} />
                 <Route path="/admin/incidents/:id" element={<IncidentDetail />} />
                 <Route path="/admin/register-officer" element={<RegisterOfficer />} />
-                <Route path="/admin/assignIncident" element={<AssignIncident />} />
+                {/* <Route path="/admin/assignIncident" element={<AssignIncident />} /> */}
                 <Route path="/admin/assignIncident" element={<AssignIncident />} />
               </>
             )}
 
             {/* Officer Routes */}
-            {userRole === 'officer' && (
+            {userRole === 'Officer' && (
               <>
                 <Route path="/officer" element={<OfficerDashboard />} />
                 <Route path="/officer/incidents/:id" element={<OfficerIncidentDetail />} />
@@ -115,7 +116,7 @@ function App() {
               element={
                 userRole === 'admin'
                   ? <Navigate to="/admin/dashboard" replace />
-                  : userRole === 'officer'
+                  : userRole === 'Officer'
                   ? <Navigate to="/officer" replace />
                   : <Navigate to="/report-incident" replace />
               }

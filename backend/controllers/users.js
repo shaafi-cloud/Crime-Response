@@ -115,3 +115,16 @@ export const updateUser = async (req, res) => {
       res.status(500).json({ message: 'Failed to update user' });
     }
   };
+
+  export const getUserByType = async (req, res) => {
+    const type = req.params.type;
+    try {
+        const users = await User.find({ type }).select("username _id");
+        res.status(200).json({data: users});
+        console.log(users);
+    } catch (error) {
+        console.log("error fetching users by type", error);
+        res.status(500).json({message: "Server error"});
+        
+    }
+  };
