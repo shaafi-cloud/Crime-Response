@@ -70,6 +70,7 @@ export const updateIncident = async (req, res) => {
     }
 };
 
+
 export const getIncident = async (req, res) => {
     try {
         const incidents = await Incident.find({});
@@ -82,3 +83,29 @@ export const getIncident = async (req, res) => {
         res.status(500).json({error: "server error"});
     }
 };
+
+// get some data from data base
+export const getSome = async (req, res) => {
+    try {
+        const incidents = await Incident.find({}, 'typeOfIncident status _id');
+        if(!incidents){
+            return res.status(404).send({ error: ' no Incident found.' });
+        }
+        res.status(200).json({data: incidents});
+    } catch (error) {
+        console.log("error fetching incidents", error.message);
+        res.status(500).json({error: "server error"});
+    }
+};
+// Example route for fetching a single incident by ID
+export const getIncidntbyId = async (req, res) => {
+    try {
+      const incident = await Incident.findById(req.params.id); // Fetch the incident by ID
+      if (!incident) {
+        return res.status(404).json({ message: 'Incident not found' });
+      }
+      res.json({ data: incident });
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to fetch incident' });
+    }
+  };

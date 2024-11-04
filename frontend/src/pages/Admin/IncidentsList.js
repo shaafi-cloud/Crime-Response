@@ -4,7 +4,7 @@ import axios from "axios";
 
 function IncidentsList() {
   const [search, setSearch] = useState("");
-  const [sortField, setSortField] = useState("type"); // Default sort by type
+  const [sortField, setSortField] = useState("typeOfIncident"); // Default sort by typeOfIncident
   const [sortOrder, setSortOrder] = useState("asc");
   const [incidents, setIncidents] = useState([]); // State to hold incidents
   const [loading, setLoading] = useState(true); // State for loading
@@ -14,9 +14,9 @@ function IncidentsList() {
     const fetchIncidents = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/incident/all"
+          "http://localhost:5000/api/incident/some"
         );
-        setIncidents(response.data.data); // Assuming response structure is { data: incidents }
+        setIncidents(response.data.data); // Set incidents from response
       } catch (error) {
         console.error("Failed to fetch incidents:", error);
         setError("Failed to fetch incidents. Please try again later."); // Set error message
@@ -31,7 +31,12 @@ function IncidentsList() {
   const handleSearchChange = (e) => setSearch(e.target.value.toLowerCase());
 
   const sortedIncidents = incidents
-    .filter((incident) => incident.type.toLowerCase().includes(search))
+    .filter((incident) => {
+      return (
+        incident.typeOfIncident &&
+        incident.typeOfIncident.toLowerCase().includes(search)
+      );
+    })
     .sort((a, b) => {
       if (a[sortField] < b[sortField]) return sortOrder === "asc" ? -1 : 1;
       if (a[sortField] > b[sortField]) return sortOrder === "asc" ? 1 : -1;
@@ -47,7 +52,7 @@ function IncidentsList() {
 
       <input
         type="text"
-        placeholder="Search by type"
+        placeholder="Search by Type of Incident"
         className="mb-4 p-2 border rounded w-full"
         value={search}
         onChange={handleSearchChange}
@@ -57,7 +62,7 @@ function IncidentsList() {
         onChange={(e) => setSortField(e.target.value)}
         className="mb-4 p-2 border rounded"
       >
-        <option value="type">Sort by Type</option>
+        <option value="typeOfIncident">Sort by Type of Incident</option>
         <option value="status">Sort by Status</option>
       </select>
       <select
@@ -72,7 +77,7 @@ function IncidentsList() {
         <thead>
           <tr>
             <th className="border-b p-2 text-left">ID</th>
-            <th className="border-b p-2 text-left">Type</th>
+            <th className="border-b p-2 text-left">Type of Incident</th>
             <th className="border-b p-2 text-left">Status</th>
             <th className="border-b p-2 text-left">Actions</th>
           </tr>
@@ -80,10 +85,8 @@ function IncidentsList() {
         <tbody>
           {sortedIncidents.map((incident) => (
             <tr key={incident._id}>
-              {" "}
-              {/* Using MongoDB's ObjectId */}
               <td className="border-b p-2">{incident._id}</td>
-              <td className="border-b p-2">{incident.type}</td>
+              <td className="border-b p-2">{incident.typeOfIncident}</td>
               <td className="border-b p-2">{incident.status}</td>
               <td className="border-b p-2">
                 <Link

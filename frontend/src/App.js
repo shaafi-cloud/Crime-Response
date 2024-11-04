@@ -87,6 +87,7 @@ function App() {
                 <Route path="/admin/incidents/:id" element={<IncidentDetail />} />
                 <Route path="/admin/register-officer" element={<RegisterOfficer />} />
                 <Route path="/admin/assignIncident" element={<AssignIncident />} />
+                <Route path="/admin/assignIncident" element={<AssignIncident />} />
               </>
             )}
 
