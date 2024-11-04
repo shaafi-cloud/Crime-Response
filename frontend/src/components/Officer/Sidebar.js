@@ -6,46 +6,43 @@ import { FaRegCheckSquare, FaEdit } from "react-icons/fa";
 
 function OfficerSidebar() {
   return (
-    <aside className="w-64 bg-gray-200 text-2xl">
-      <h2 className="text-xl font-bold mt-10 mb-6">Officer Dashboard</h2>
-      <nav>
+    <aside className="w-64 bg-white text-gray-600 font-sans">
+      <div className="flex items-center justify-center mt-8 mb-4">
+        <div className="text-xl font-bold text-purple-700">Officer Dashboard</div>
+      </div>
+      <nav className="mt-10">
         <ul>
-          <li className="mb-2">
+          <li className="mb-4">
             <NavLink
               to="/officer"
               className={({ isActive }) =>
-                `block py-2 px-4 rounded text-lg flex items-center 
-            ${isActive ? "bg-blue-500" : "hover:bg-gray-700"}`
-              }
+                `flex items-center py-2 px-4 rounded text-lg 
+                ${isActive ? "text-purple-700" : "text-gray-600 hover:text-purple-700"}`}
             >
-              <FaEdit className="mr-2 text-2xl" /> {/* Increased icon size */}
+              <FaEdit className="mr-2 text-xl" />
               Assigned Incidents
             </NavLink>
           </li>
-          <li className="mb-2">
+          <li className="mb-4">
             <NavLink
               to="/progress"
               className={({ isActive }) =>
-                `block py-2 px-4 rounded text-lg flex items-center 
-            ${isActive ? "bg-blue-500" : "hover:bg-gray-700"}`
-              }
+                `flex items-center py-2 px-4 rounded text-lg 
+                ${isActive ? "text-purple-700" : "text-gray-600 hover:text-purple-700"}`}
             >
-              <TbProgressDown className="mr-2 text-2xl" />{" "}
-              {/* Increased icon size */}
+              <TbProgressDown className="mr-2 text-xl" />
               Progress Incidents
             </NavLink>
           </li>
 
-          <li className="mb-2">
+          <li className="mb-4">
             <NavLink
               to="/resolved"
               className={({ isActive }) =>
-                `block py-2 px-4 rounded text-lg flex items-center 
-            ${isActive ? "bg-blue-500" : "hover:bg-gray-700"}`
-              }
+                `flex items-center py-2 px-4 rounded text-lg 
+                ${isActive ? "text-purple-700" : "text-gray-600 hover:text-purple-700"}`}
             >
-              <FaRegCheckSquare className="mr-2 text-2xl" />{" "}
-              {/* Increased icon size */}
+              <FaRegCheckSquare className="mr-2 text-xl" />
               Resolved Incidents
             </NavLink>
           </li>
