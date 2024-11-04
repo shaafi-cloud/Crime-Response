@@ -2,6 +2,59 @@ import Incident from "../models/incident.js";
 import multer from 'multer';
 
 
+export const getIncidentTypes = async (req, res) => {
+    try {
+      const types = await Incident.aggregate([
+        {
+          $group: {
+            _id: "$typeOfIncident", // Group by type of incident
+            count: { $sum: 1 }, // Count the number of incidents for each type
+            incidents: {
+              $push: {
+                id: "$_id",
+                location: "$location",
+                date: "$date"
+              }
+            }
+          }
+        }
+      ]);
+      
+      res.status(200).json({ data: types });
+    } catch (error) {
+      console.log("Error fetching incident types:", error.message);
+      res.status(500).json({ error: "Server error" });
+    }
+  };
+
+// Other imports and existing functions...
+
+export const getIncidentStatuses = async (req, res) => {
+  try {
+    const statuses = await Incident.aggregate([
+      {
+        $group: {
+          _id: "$status", // Group by status
+          incidents: {
+            $push: {
+              id: "$_id",
+              type: "$typeOfIncident",
+              location: "$location",
+              date: "$date"
+            }
+          },
+          count: { $sum: 1 } // Count the number of incidents in each status
+        }
+      }
+    ]);
+    
+    res.status(200).json({ data: statuses });
+  } catch (error) {
+    console.log("Error fetching incident statuses:", error.message);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
 export const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, 'uploads/'); // Specify the directory to save uploaded files

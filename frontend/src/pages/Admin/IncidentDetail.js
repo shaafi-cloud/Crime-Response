@@ -9,6 +9,8 @@ function IncidentDetail() {
   const [loading, setLoading] = useState(true); // State for loading
   const [error, setError] = useState(""); // State for error messages
   const [status, setStatus] = useState(""); // State for managing status
+  const [officerName, setOfficerName] = useState(""); // State for Officer Name
+  const [priority, setPriority] = useState("Medium"); // State for Priority
 
   useEffect(() => {
     const fetchIncident = async () => {
@@ -27,14 +29,27 @@ function IncidentDetail() {
     fetchIncident(); // Call the function to fetch incident
   }, [id]);
 
-  const handleAssignClick = () => {
-    navigate(`/assign-incident/${id}`);
+  const handleAssignClick = async () => {
+    try {
+      // Prepare the data to send to the database
+      const data = {
+        officerName,
+        priority,
+        status,
+      };
+
+      // Send a POST/PUT request to update the incident with the officer and priority
+      await axios.put(`http://localhost:5000/api/incident/${id}`, data);
+      navigate(`/admin/incidents`); // Redirect after assignment
+    } catch (error) {
+      console.error("Failed to assign officer:", error);
+      setError("Failed to assign officer. Please try again later.");
+    }
   };
 
   const handleStatusChange = (e) => {
     setStatus(e.target.value);
     console.log(`Status for Incident ${id} updated to: ${e.target.value}`);
-    // Here you would typically call the backend to update the status in the database
   };
 
   if (loading) return <div>Loading...</div>; // Loading state
@@ -95,15 +110,43 @@ function IncidentDetail() {
               )}
             </td>
           </tr>
+          {/* New Officer Name and Priority columns */}
+          <tr>
+            <td className="border p-2 font-semibold bg-gray-100">Officer Name</td>
+            <td className="border p-2">
+              <input
+                type="text"
+                value={officerName}
+                onChange={(e) => setOfficerName(e.target.value)}
+                placeholder="Enter Officer Name"
+                className="border p-2 rounded w-full"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td className="border p-2 font-semibold bg-gray-100">Priority</td>
+            <td className="border p-2">
+              <select 
+                value={priority} 
+                onChange={(e) => setPriority(e.target.value)} 
+                className="border p-2 rounded w-full"
+              >
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </td>
+          </tr>
         </tbody>
       </table>
 
-      {/* Button to navigate to AssignIncident page */}
-      <Link to={`/admin/assignIncident`}>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded mb-4">
-          Assign to Officer
-        </button>
-      </Link>
+      {/* Button to assign officer */}
+      <button 
+        onClick={handleAssignClick} 
+        className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+      >
+        Assign to Officer
+      </button>
 
       <Link to="/admin/incidents" className="inline-block text-blue-500">
         Back to Incidents List

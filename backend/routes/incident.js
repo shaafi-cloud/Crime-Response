@@ -2,10 +2,12 @@ import express from 'express';
 import mongoose from 'mongoose';
 import Incident from '../models/incident.js';
 import User from '../models/user.js';
-import { createIncident, getIncident, getIncidntbyId, getSome, updateIncident, upload } from '../controllers/incidents.js';
+import { createIncident, getIncident, getIncidntbyId, getSome, updateIncident, upload , getIncidentTypes, getIncidentStatuses } from '../controllers/incidents.js';
 const router = express.Router();
 
+router.get("/statuses", getIncidentStatuses);
 
+router.get("/types", getIncidentTypes);
 //create new incident
 router.post("/add", upload.single('evidence'), createIncident)
 
