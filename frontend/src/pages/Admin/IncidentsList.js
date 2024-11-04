@@ -14,8 +14,7 @@ function IncidentsList() {
     const fetchIncidents = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/incident/all"
-        );
+          "http://localhost:5000/api/incident/all");
         setIncidents(response.data.data); // Assuming response structure is { data: incidents }
       } catch (error) {
         console.error("Failed to fetch incidents:", error);
@@ -28,10 +27,10 @@ function IncidentsList() {
     fetchIncidents(); // Call the function to fetch incidents
   }, []);
 
-  const handleSearchChange = (e) => setSearch(e.target.value.toLowerCase());
+  const handleSearchChange = (e) => setSearch(e.target.value);
 
   const sortedIncidents = incidents
-    .filter((incident) => incident.type.toLowerCase().includes(search))
+    .filter((incident) => incident.type && incident.type.includes(search))
     .sort((a, b) => {
       if (a[sortField] < b[sortField]) return sortOrder === "asc" ? -1 : 1;
       if (a[sortField] > b[sortField]) return sortOrder === "asc" ? 1 : -1;
@@ -101,4 +100,4 @@ function IncidentsList() {
   );
 }
 
-export default IncidentsList;
+export default IncidentsList

@@ -1,51 +1,139 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function AdminDashboard() {
-  return (
-    <div>
-      {/* <header className="flex items-center justify-between px-6 py-4 bg-white shadow-md"> */}
-        {/* <div className="flex items-center">
-          <button className="mr-4 text--50gray0 focus:outline-none">
-            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-        </div> */}
-        <div className="flex items-center">
-          {/* <div>
-            <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-            <p className="text-gray-500">Welcome to the Admin Dashboard</p>
-          </div> */}
-          {/* <button className="ml-4 text-gray-500 focus:outline-none">
-            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
-          </button>
-          <img src="" alt="Admin Avatar" className="w-10 h-10 rounded-full ml-4" /> */}
-        </div>
-      {/* </header> */}
-      <h1 className="text-2xl font-bold mb-4 ">Dashboard Overview</h1>
+  const [activeSection, setActiveSection] = useState(null);
+  const [incidentData, setIncidentData] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState(null);
 
-      <div className="p-6 bg-white shadow-md rounded-md">
-        <div className="grid grid-cols-3 gap-4">
-          <div className="bg-blue-500 text-white p-4 rounded-md">
-            <h2>Total Incidents</h2>
-            <p className="text-xl">42</p>
-          </div>
-          <div className="bg-green-500 text-white p-4 rounded-md">
-            <h2>Types</h2>
-            <p className="text-xl">5 Types</p>
-          </div>
-          <div className="bg-yellow-500 text-white p-4 rounded-md">
-            <h2>Statuses</h2>
-            <p className="text-xl">3 Statuses</p>
-          </div>
+  const handleSectionClick = (section) => {
+    setActiveSection(activeSection === section ? null : section);
+  };
+
+  const handleStatusClick = (status) => {
+    setSelectedStatus(status);
+  };
+
+  // Fetch incidents from the database
+  useEffect(() => {
+    const fetchIncidents = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/incident/all');
+        setIncidentData(response.data.data); // Assuming the API returns an object with a 'data' field
+      } catch (error) {
+        console.error("Error fetching incidents:", error);
+      }
+    };
+
+    fetchIncidents();
+  }, []);
+
+  const filteredIncidents = selectedStatus 
+    ? incidentData.filter(incident => incident.status === selectedStatus)
+    : incidentData;
+
+  return (
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <h1 className="text-2xl font-bold mb-6">Dashboard Overview</h1>
+
+      {/* Dashboard Stats Cards */}
+      <div className="grid grid-cols-4 gap-4 mb-8">
+        <div
+          className="text-purple-700 p-6 rounded-lg shadow-md cursor-pointer"
+          onClick={() => handleSectionClick('incidents')}
+        >
+          <h2 className="text-lg font-semibold">Total Incidents</h2>
+          <p className="text-3xl font-bold mt-2">{incidentData.length}</p>
         </div>
-        {/* <Link to="/incidents" className="mt-6 inline-block text-blue-500">
-          View Incident List
-        </Link> */}
+
+        <div
+          className="text-gray-600 p-6 rounded-lg shadow-md cursor-pointer"
+          onClick={() => handleSectionClick('types')}
+        >
+          <h2 className="text-lg font-semibold">Available Types</h2>
+          <p className="text-3xl font-bold mt-2">5</p>
+        </div>
+
+        <div
+          className="text-purple-700 p-6 rounded-lg shadow-md cursor-pointer"
+          onClick={() => handleSectionClick('statuses')}
+        >
+          <h2 className="text-lg font-semibold">Incident Status</h2>
+          <p className="text-3xl font-bold mt-2">14</p>
+        </div>
       </div>
+
+      {/* Incident Tables */}
+      {activeSection === 'incidents' && (
+        <div className="mt-4">
+          <h3 className="text-xl font-semibold">Incidents</h3>
+          <table className="min-w-full bg-white border border-gray-200">
+            <thead>
+              <tr>
+                <th className="border px-4 py-2">ID</th>
+                <th className="border px-4 py-2">Status</th>
+                <th className="border px-4 py-2">Type</th>
+                <th className="border px-4 py-2">Location</th>
+                <th className="border px-4 py-2">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {incidentData.map(incident => (
+                <tr key={incident._id}>
+                  <td className="border px-4 py-2">{incident._id}</td>
+                  <td className="border px-4 py-2">{incident.status}</td>
+                  <td className="border px-4 py-2">{incident.typeOfIncident}</td>
+                  <td className="border px-4 py-2">{incident.location}</td>
+                  <td className="border px-4 py-2">{new Date(incident.date).toLocaleDateString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {activeSection === 'types' && (
+        <div className="mt-4">
+          <h3 className="text-xl font-semibold">Available Types</h3>
+          <p>List of incident types would go here.</p>
+          {/* Add the actual types as necessary */}
+        </div>
+      )}
+
+      {activeSection === 'statuses' && (
+        <div className="mt-4">
+          <h3 className="text-xl font-semibold">Select Status</h3>
+          <button onClick={() => handleStatusClick('Pending')} className="mr-2 p-2 bg-blue-500 text-white rounded">Pending</button>
+          <button onClick={() => handleStatusClick('In Progress')} className="mr-2 p-2 bg-blue-500 text-white rounded">In Progress</button>
+          <button onClick={() => handleStatusClick('Resolved')} className="p-2 bg-blue-500 text-white rounded">Resolved</button>
+
+          {selectedStatus && (
+            <div className="mt-4">
+              <h4 className="text-lg font-semibold">Incidents with status: {selectedStatus}</h4>
+              <table className="min-w-full bg-white border border-gray-200">
+                <thead>
+                  <tr>
+                    <th className="border px-4 py-2">ID</th>
+                    <th className="border px-4 py-2">Type</th>
+                    <th className="border px-4 py-2">Location</th>
+                    <th className="border px-4 py-2">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredIncidents.map(incident => (
+                    <tr key={incident._id}>
+                      <td className="border px-4 py-2">{incident._id}</td>
+                      <td className="border px-4 py-2">{incident.typeOfIncident}</td>
+                      <td className="border px-4 py-2">{incident.location}</td>
+                      <td className="border px-4 py-2">{new Date(incident.date).toLocaleDateString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

@@ -91,7 +91,7 @@ function App() {
             )}
 
             {/* Officer Routes */}
-            {userRole === 'officer' && (
+            {userRole === 'Officer' && (
               <>
                 <Route path="/officer" element={<OfficerDashboard />} />
                 <Route path="/officer/incidents/:id" element={<OfficerIncidentDetail />} />
