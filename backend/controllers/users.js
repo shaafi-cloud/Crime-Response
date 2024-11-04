@@ -88,4 +88,30 @@ export const getUserRole = async (req, res) => {
         res.status(500).json({message: "Server error"});
         
     }
-}
+};
+
+
+
+export const updateUser = async (req, res) => {
+    const  id  = req.params.id;
+    const { username, email, password } = req.body;
+  
+    try {
+      // Find the user by ID
+      const user = await User.findById(id);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Update user fields
+      if (username) user.username = username;
+      if (email) user.email = email;
+      if (password) user.password = password; // In production, hash the password before saving
+  
+      const updatedUser = await user.save();
+      res.status(200).json({ message: 'User updated successfully', data: updatedUser });
+    } catch (error) {
+      console.error('Error updating user:', error);
+      res.status(500).json({ message: 'Failed to update user' });
+    }
+  };

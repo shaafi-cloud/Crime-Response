@@ -1,15 +1,35 @@
 import Incident from "../models/incident.js";
+import multer from 'multer';
+
+
+export const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/'); // Specify the directory to save uploaded files
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + '-' + file.originalname);
+    },
+  });
+  
+ export const upload = multer({ storage: storage });
+
+
 
 export const createIncident = async (req, res) => {
-    const incident = req.body;
-    if (!incident.typeOfIncident || !incident.date || !incident.description ) {
+    // const incident = req.body;
+    const { typeOfIncident, date, location, description } = req.body;
+    const evidence = req.file ? req.file.path : null; // Save the file path
+
+    if (!typeOfIncident ||!date ||!location ||!description) {
         return res.status(400).send({message: "fill the required fields"});
     }
-    const newIncident = new Incident(incident);
+    const newIncident = new Incident({
+        typeOfIncident, date, location, description, evidence
+    });
 
     try {
         await newIncident.save();
-        res.status(200).send({message: "incident saved sucesfully"})
+        res.status(200).send({ success: true, message: "incident saved sucesfully"})
     } catch (error) {
         console.log("error creating incident", error.message);
         res.status(400).send({message: "server error"});
