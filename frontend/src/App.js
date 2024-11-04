@@ -3,11 +3,13 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import axios from 'axios';
 import AdminSidebar from './components/Admin/Sidebar';
 import OfficerSidebar from './components/Officer/Sidebar';
+import UserSidebar from './components/user/UserSidebar';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import IncidentsList from './pages/Admin/IncidentsList';
 import IncidentDetail from './pages/Admin/IncidentDetail';
 import RegisterOfficer from './pages/Admin/RegisterOfficer';
 import OfficerDashboard from './pages/Officer/OfficerDashboard';
+
 import ProgressIncident from './pages/Officer/ProgressIncident';
 import ProgressIncidentDetail from './pages/Officer/ProgressIncidentDetail';
 import ResolvedIncident from './pages/Officer/ResolvedIncident';
@@ -33,7 +35,7 @@ function App() {
     localStorage.removeItem('token');
     setIsAuthenticated(false);
     setUserRole(null);
-    Navigate('/login');
+    window.location.href = '/login';
   };
 
   useEffect(() => {
@@ -76,6 +78,9 @@ function App() {
         {/* Conditionally render the sidebar based on user role */}
         {userRole === 'admin' && <AdminSidebar onLogout={handleLogout} />}
         {userRole === 'officer' && <OfficerSidebar />}
+        {userRole === 'user' && <UserSidebar onLogout={handleLogout} />}
+        
+        
 
         <main className="flex-1 p-6">
           <Routes>
@@ -106,7 +111,10 @@ function App() {
 
             {/* User Role: Redirect to ReportIncident */}
             {userRole === 'user' && (
+                
+              
               <Route path="/report-incident" element={<ReportIncident />} />
+              
             )}
 
             {/* Redirect to appropriate dashboard based on user role */}
