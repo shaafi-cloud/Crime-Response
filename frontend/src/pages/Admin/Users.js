@@ -49,22 +49,31 @@ const Users = () => {
 
   const openUpdateDialog = (user) => {
     setSelectedUser(user);
+    setSelectedUserId(user._id); // Set the selected user ID here for update
     setUpdateDialogOpen(true);
   };
+  
 
   // Update users
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
       const { username, email, password } = selectedUser;
-      await axios.put(`http://localhost:5000/api/users/${selectedUserId}`, { username, email, password });
-      setUsers(users.map(user => (user._id === selectedUserId ? { ...user, username, email } : user))); // Update user in the state
+      const updateData = { username, email };
+  
+      if (password) {
+        updateData.password = password;
+      }
+  
+      await axios.put(`http://localhost:5000/api/users/${selectedUserId}`, updateData);
+      setUsers(users.map(user => (user._id === selectedUserId ? { ...user, username, email } : user)));
       setUpdateDialogOpen(false); // Close the update dialog
     } catch (error) {
       console.error('Failed to update user:', error);
       setError('Failed to update user. Please try again later.');
     }
   };
+  ;
 
   // Filtered users based on role and search term
   const filteredUsers = users.filter(user => {
