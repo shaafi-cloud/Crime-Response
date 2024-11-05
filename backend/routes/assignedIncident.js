@@ -12,7 +12,7 @@ const router = express.Router();
 router.post("/add", assignIncident);
 
 
-//Get all assigned incidents with validation ID
-router.get("/:officerId", getAllassigned);
+//Get all assigned incidents by username
+router.get("/:username", getAllassigned);
 
 export default router;

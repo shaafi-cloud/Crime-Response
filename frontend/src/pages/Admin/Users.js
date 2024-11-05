@@ -10,6 +10,8 @@ const Users = () => {
   const [isUpdateDialogOpen, setUpdateDialogOpen] = useState(false); // State to control update dialog visibility
   const [selectedUserId, setSelectedUserId] = useState(null); // State for the user being deleted
   const [selectedUser, setSelectedUser] = useState({}); // State for user being updated
+  const [roleFilter, setRoleFilter] = useState(''); // State for role filter
+  const [searchTerm, setSearchTerm] = useState(''); // State for search term
 
   // Read Users
   useEffect(() => {
@@ -28,7 +30,7 @@ const Users = () => {
     fetchUsers(); // Call the function to fetch users
   }, []); // Empty dependency array means this effect runs once on mount
 
-      // Delete User
+  // Delete User
   const handleDelete = async () => {
     try {
       await axios.delete(`http://localhost:5000/api/users/${selectedUserId}`);
@@ -49,7 +51,8 @@ const Users = () => {
     setSelectedUser(user);
     setUpdateDialogOpen(true);
   };
-// update users
+
+  // Update users
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
@@ -63,6 +66,13 @@ const Users = () => {
     }
   };
 
+  // Filtered users based on role and search term
+  const filteredUsers = users.filter(user => {
+    const matchesRole = roleFilter ? user.type === roleFilter : true;
+    const matchesSearch = user.username.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesRole && matchesSearch;
+  });
+
   return (
     <div className="p-6 bg-white shadow-md rounded-md">
       <h1 className="text-2xl font-bold mb-4">Users</h1>
@@ -73,7 +83,27 @@ const Users = () => {
         <p className="text-red-500">{error}</p> // Display error message
       ) : (
         <>
-          {/* <h2 className="text-xl font-bold mt-6 mb-4">Users List</h2> */}
+          {/* Role Filter and Search Input */}
+          <div className="flex mb-4">
+            <select
+              value={roleFilter}
+              onChange={(e) => setRoleFilter(e.target.value)}
+              className="border p-2 rounded mr-2"
+            >
+              <option value="">All Roles</option>
+              <option value="admin">Admin</option>
+              <option value="officer">Officer</option>
+              <option value="user">User</option>
+            </select>
+            <input
+              type="text"
+              placeholder="Search by name"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="border p-2 rounded w-full"
+            />
+          </div>
+
           <table className="w-full border-collapse mb-4">
             <thead>
               <tr>
@@ -85,7 +115,7 @@ const Users = () => {
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              {filteredUsers.map((user) => (
                 <tr key={user._id}> {/* Use the unique _id for the key */}
                   <td className="border-b p-2">{user._id}</td>
                   <td className="border-b p-2">{user.username}</td>
@@ -94,13 +124,13 @@ const Users = () => {
                   <td className="border-b p-2">
                     <button
                       onClick={() => openUpdateDialog(user)}
-                      className="bg-yellow-500 text-white px-4 py-1 rounded mr-2"
+                      className="bg-purple-500 text-white px-4 py-1 rounded mr-2"
                     >
                       Update
                     </button>
                     <button
                       onClick={() => openDeleteDialog(user._id)}
-                      className="bg-red-500 text-white px-4 py-1 rounded"
+                      className="text-gray-800 bg-red-300 px-4 py-1 rounded"
                     >
                       Delete
                     </button>
@@ -181,7 +211,7 @@ const Users = () => {
 
       {/* Button to navigate to Register Officer page */}
       <Link to="/admin/register-officer">
-        <button className="bg-blue-500 text-white px-4 py-2 rounded">
+        <button className="bg-purple-500 text-white px-4 py-2 rounded">
           Add Officer
         </button>
       </Link>

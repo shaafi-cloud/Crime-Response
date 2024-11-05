@@ -1,11 +1,11 @@
+import mongoose from "mongoose";
 import AssignIncident from "../models/assignedIncident.js";
 import Incident from "../models/incident.js";
 import User from "../models/user.js";
 
 export const assignIncident = async (req, res) => {
-    const { incidentId, officerUsername, priority, typeOfIncident, description, location, date, evidence, status } = req.body;
-
-    //validate officer and incident id
+    const { incidentId, officerUsername, priority, typeOfIncident,
+         description, location, date, status } = req.body;
     try {
         const officer = await User.findOne({ username: officerUsername });
         if (!officer) {
@@ -14,12 +14,13 @@ export const assignIncident = async (req, res) => {
     
         const newAssignment = new AssignIncident({
             incidentId,
+            officerUsername,
             officerId: officer._id,
             priority,
-            typeOfIncident,
-            description,
-            location,
-            date,
+            // typeOfIncident,
+            // description,
+            // location,
+            // date,
             status,
         });
     
@@ -31,18 +32,21 @@ export const assignIncident = async (req, res) => {
       }};
 
 export const getAllassigned = async (req, res) => {
-    const  officerId  = req.params.id;
-    if (!mongoose.Types.ObjectId.isValid(officerId)){
-        return res.status(400).json({ error: 'Invalid officer ID.' });
-
-    }
+    const { username } = req.params;
+ 
     try {
-        const assignedIncidents = await AssignIncident.find({officer: officerId}).populate('incident');
-        if(assignedIncidents.length === 0){
-            return res.status(404).json({message: "No incidents assigned yet"})
+        const officer = await User.findOne({_id: username });
+        if (!officer) {
+          return res.status(404).json({ error: "Officer not found" });
         }
-        res.status(200).json({data: assignedIncidents});
-    } catch (error) {
-        res.status(500).json({error: error.message});
-    }
+        
+        const assignedIncidents = await AssignIncident.find({ officerId: officer._id }).populate('incidentId');
+        if (assignedIncidents.length === 0) {
+          return res.status(404).json({ message: "No incidents assigned yet" });
+        }
+    
+        res.status(200).json({ data: assignedIncidents });
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
 };

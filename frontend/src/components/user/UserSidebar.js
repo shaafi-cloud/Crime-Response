@@ -5,46 +5,23 @@ import { TbProgressDown } from "react-icons/tb";
 import { FaRegCheckSquare, FaEdit } from "react-icons/fa";
 import { FaUserFriends, FaListAlt, FaSignOutAlt } from 'react-icons/fa';
 
-function OfficerSidebar({onLogout}) {
+function UserSidebar({onLogout}  ) {
   return (
     <aside className="w-64 bg-white text-gray-600 font-sans">
       <div className="flex items-center justify-center mt-8 mb-4">
-        <div className="text-xl font-bold text-purple-700">Officer Dashboard</div>
+        <div className="text-xl font-bold text-purple-700 mr-11">User Dashboard</div>
       </div>
       <nav className="mt-10">
         <ul>
           <li className="mb-4">
             <NavLink
-              to="/officer/incidents"
+              // to="/report-incident"
               className={({ isActive }) =>
                 `flex items-center py-2 px-4 rounded text-lg 
                 ${isActive ? "text-purple-700" : "text-gray-600 hover:text-purple-700"}`}
             >
               <FaEdit className="mr-2 text-xl" />
-              Assigned Incidents
-            </NavLink>
-          </li>
-          <li className="mb-4">
-            <NavLink
-              to="/progress"
-              className={({ isActive }) =>
-                `flex items-center py-2 px-4 rounded text-lg 
-                ${isActive ? "text-purple-700" : "text-gray-600 hover:text-purple-700"}`}
-            >
-              <TbProgressDown className="mr-2 text-xl" />
-              Progress Incidents
-            </NavLink>
-          </li>
-
-          <li className="mb-4">
-            <NavLink
-              to="/resolved"
-              className={({ isActive }) =>
-                `flex items-center py-2 px-4 rounded text-lg 
-                ${isActive ? "text-purple-700" : "text-gray-600 hover:text-purple-700"}`}
-            >
-              <FaRegCheckSquare className="mr-2 text-xl" />
-              Resolved Incidents
+              Register Incident 
             </NavLink>
           </li>
         </ul>
@@ -60,4 +37,4 @@ function OfficerSidebar({onLogout}) {
   );
 }
 
-export default OfficerSidebar;
+export default UserSidebar;

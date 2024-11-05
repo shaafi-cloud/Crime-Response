@@ -13,10 +13,12 @@ function LoginForm({ onLoginSuccess }) {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:5000/api/users/login', { username, password });
-      const { token, role } = response.data;
+      const { token, role, user, user_id } = response.data;
 
       // Save the token to localStorage
       localStorage.setItem('token', token);
+      localStorage.setItem('role', role);
+      localStorage.setItem('user_id', user_id);
 
       // Notify App.js of successful login
       onLoginSuccess(role);

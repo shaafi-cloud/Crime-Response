@@ -3,11 +3,13 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'r
 import axios from 'axios';
 import AdminSidebar from './components/Admin/Sidebar';
 import OfficerSidebar from './components/Officer/Sidebar';
+import UserSidebar from './components/user/UserSidebar';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import IncidentsList from './pages/Admin/IncidentsList';
 import IncidentDetail from './pages/Admin/IncidentDetail';
 import RegisterOfficer from './pages/Admin/RegisterOfficer';
 import OfficerDashboard from './pages/Officer/OfficerDashboard';
+
 import ProgressIncident from './pages/Officer/ProgressIncident';
 import ProgressIncidentDetail from './pages/Officer/ProgressIncidentDetail';
 import ResolvedIncident from './pages/Officer/ResolvedIncident';
@@ -45,7 +47,7 @@ function App() {
           const response = await axios.get('http://localhost:5000/api/users/role', {
             headers: { Authorization: `Bearer ${token}` }
           });
-          console.log("the session id: ",response.data.role );
+          // console.log("the session id: ",response.data.role );
           console.log(response.data.role);
           setUserRole(response.data.role);
           setIsAuthenticated(true);
@@ -75,8 +77,11 @@ function App() {
     <Router>
       <div className="flex min-h-screen bg-gray-100">
         {/* Conditionally render the sidebar based on user role */}
-        {userRole === 'admin' && <AdminSidebar onLogout={handleLogout}/>}
-        {userRole === 'Officer' && <OfficerSidebar />}
+        {userRole === 'admin' && <AdminSidebar onLogout={handleLogout} />}
+        {userRole === 'Officer' && <OfficerSidebar onLogout={handleLogout} />}
+        {userRole === 'user' && <UserSidebar onLogout={handleLogout} />}
+        
+        
 
         <main className="flex-1 p-6">
           <Routes>
@@ -96,7 +101,7 @@ function App() {
             {/* Officer Routes */}
             {userRole === 'Officer' && (
               <>
-                <Route path="/officer" element={<OfficerDashboard />} />
+                <Route path="/officer/incidents" element={<OfficerDashboard />} />
                 <Route path="/officer/incidents/:id" element={<OfficerIncidentDetail />} />
                 <Route path="/progress" element={<ProgressIncident />} />
                 <Route path="/progress/progress/:id" element={<ProgressIncidentDetail />} />
@@ -107,7 +112,10 @@ function App() {
 
             {/* User Role: Redirect to ReportIncident */}
             {userRole === 'user' && (
+                
+              
               <Route path="/report-incident" element={<ReportIncident />} />
+              
             )}
 
             {/* Redirect to appropriate dashboard based on user role */}

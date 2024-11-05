@@ -13,6 +13,6 @@ const incidentSchema = new mongoose.Schema({
   },
 });
 
-const Incident = mongoose.model("incident", incidentSchema);
+const Incident = mongoose.model("Incident", incidentSchema);
 
 export default Incident;

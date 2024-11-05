@@ -6,21 +6,27 @@ import axios from 'axios';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [userRole, setUserRole] = useState(null); // null initially
+  const [userRole, setUserRole] = useState(null);
+  const [user_id, setUser_id] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);  // Add user state to store user info including username
+
   const navigate = useNavigate();
 
   const login = async (username, password) => {
     try {
       const response = await axios.post('http://localhost:5000/api/auth/login', { username, password });
-      const { token, role } = response.data;
-
+      const { token, role, user ,user_id } = response.data;
+        console.log("the response is+++++++++++++++++++++++++++++++++++: ", response);
       // Save token and role in localStorage
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
+      localStorage.setItem('user_id', user_id);
 
+      setUser(user);  // Set the user object with details
       setUserRole(role);
       setIsAuthenticated(true);
+      setUser_id(user_id)
 
       // Redirect based on role
       if (role === 'admin') {
@@ -37,6 +43,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
+    setUser(null);  // Reset user on logout
     setUserRole(null);
     setIsAuthenticated(false);
     navigate('/login');
@@ -54,7 +61,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ userRole, isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ userRole, isAuthenticated, login, logout, user, user_id }}>
       {children}
     </AuthContext.Provider>
   );

@@ -50,7 +50,7 @@ export const deleteUser = async (req, res)=> {
 
 export const loginUser = async (req, res) => {
     const { username, password } = req.body;
-
+    console.log("the login user:-----------------", req.body);
     try {
         // Find user by username
         const user = await User.findOne({ username });
@@ -64,7 +64,7 @@ export const loginUser = async (req, res) => {
         const token = jwt.sign({ id: user._id, type: user.type }, 'ourpro123', { expiresIn: '2h' });
 
         // Send the token and role as response
-        res.status(200).json({ token, role: user.type });
+        res.status(200).json({ token, role: user.type , user: user.username, user_id:user._id });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });

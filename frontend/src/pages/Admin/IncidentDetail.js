@@ -3,24 +3,22 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function IncidentDetail() {
-  const { id } = useParams(); // Get the incident ID from the URL parameters
-  const [incident, setIncident] = useState(null); // State to hold the incident data
-  const [loading, setLoading] = useState(true); // State for loading
-  const [error, setError] = useState(""); // State for error messages
-  const [status, setStatus] = useState(""); // State for managing status
-
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [incident, setIncident] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [status, setStatus] = useState("");
   const [showModal, setShowModal] = useState(false); // Modal visibility
   const [officers, setOfficers] = useState([]); // List of officers
   const [selectedOfficer, setSelectedOfficer] = useState(""); // Selected officer ID
-  const [priority, setPriority] = useState(""); // Priority for assignment
+  const [priority, setPriority] = useState(""); // Priority
 
   useEffect(() => {
-    // Fetch incident details
     const fetchIncident = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/incident/${id}`);
         setIncident(response.data.data);
-        console.log(response.data.data);
         setStatus(response.data.data.status);
       } catch (error) {
         console.error("Failed to fetch incident:", error);
@@ -33,8 +31,9 @@ function IncidentDetail() {
     // Fetch officers for assignment
     const fetchOfficers = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/users/type/officer");
+        const response = await axios.get("http://localhost:5000/api/users/type/Officer");
         setOfficers(response.data.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Failed to fetch officers:", error);
       }
@@ -44,39 +43,35 @@ function IncidentDetail() {
     fetchOfficers();
   }, [id]);
 
- 
-
   const handleStatusChange = (e) => setStatus(e.target.value);
 
   const handleAssign = async () => {
     try {
-      // Prepare data to send
       const assignedData = {
         incidentId: id,
         officerUsername: selectedOfficer,
         priority,
-        typeOfIncident: incident.typeOfIncident,
-        description: incident.description,
-        location: incident.location,
-        date: incident.date,
-        evidence: incident.evidence,
+        // typeOfIncident: incident.typeOfIncident,
+        // description: incident.description,
+        // location: incident.location,
+        // date: incident.date,
         status
       };
 
-          // Send assignment data to the backend
-          await axios.post("http://localhost:5000/api/incident/assign", assignedData);
-      
-          alert("Incident assigned successfully!");
-          setShowModal(false); // Close the modal after assignment
-        } catch (error) {
-          console.error("Error assigning incident:", error);
-          alert("Error assigning incident.");
-        };
+      console.log("Assigned incident: ", assignedData);
+
+      await axios.post(`http://localhost:5000/api/incident/assign/add`, assignedData);
+      alert("Incident assigned successfully!");
+      setShowModal(false); // Close the modal after assignment
+      navigate(`/admin/incidents`);
+    } catch (error) {
+      console.error("Failed to assign officer:", error);
+      setError("Failed to assign officer. Please try again later.");
+    }
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div className="text-red-500">{error}</div>;
-  if (!incident) return <div>No details available for this incident.</div>;  // Add this line
-
 
   return (
     <div className="p-6 bg-white shadow-md rounded-md">
@@ -135,15 +130,15 @@ function IncidentDetail() {
         </tbody>
       </table>
 
-      {/* Button to open modal for assigning to an officer */}
-      <button
+      {/* Button to open modal */}
+      <button 
+        onClick={() => setShowModal(true)} 
         className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
-        onClick={() => setShowModal(true)}
       >
         Assign to Officer
       </button>
 
-      <Link to="/admin/incidents" className="inline-block text-blue-500 ml-6">
+      <Link to="/admin/incidents" className="inline-block text-blue-500 ml-4">
         Back to Incidents List
       </Link>
 
@@ -156,13 +151,13 @@ function IncidentDetail() {
               Officer:
               <select 
                 value={selectedOfficer} 
-                onChange={(e) => setSelectedOfficer(e.target.value)}
+                onChange={(e) => setSelectedOfficer(e.target.value)} 
                 className="block w-full p-2 border rounded"
               >
-                <option value="">Select Officer</option>
+                <option hidden value="">Select Officer</option>
                 {officers.map((officer) => (
-                  <option key={officer._id} value={officer._id}>
-                    {officer.name}
+                  <option key={officer._id} value={officer.username}>
+                    {officer.username}
                   </option>
                 ))}
               </select>
@@ -171,10 +166,10 @@ function IncidentDetail() {
               Priority:
               <select 
                 value={priority} 
-                onChange={(e) => setPriority(e.target.value)}
+                onChange={(e) => setPriority(e.target.value)} 
                 className="block w-full p-2 border rounded"
               >
-                <option value="" hidden>Select Priority</option>
+              <option hidden value="">Select Priority</option>
                 <option value="High">High</option>
                 <option value="Medium">Medium</option>
                 <option value="Low">Low</option>
@@ -182,14 +177,14 @@ function IncidentDetail() {
             </label>
             <div className="flex justify-end mt-4">
               <button 
+                onClick={handleAssign} 
                 className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                onClick={handleAssign}
               >
                 Assign
               </button>
               <button 
+                onClick={() => setShowModal(false)} 
                 className="bg-gray-300 px-4 py-2 rounded"
-                onClick={() => setShowModal(false)}
               >
                 Cancel
               </button>
@@ -199,7 +194,6 @@ function IncidentDetail() {
       )}
     </div>
   );
-}
 }
 
 export default IncidentDetail;
