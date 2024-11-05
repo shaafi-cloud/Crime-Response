@@ -1,4 +1,3 @@
-// src/pages/SignupForm.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -8,10 +7,21 @@ function SignupForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isPasswordValid, setIsPasswordValid] = useState(true);
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
+
+    // Password validation
+    const passwordIsValid = password.length >= 8;
+    setIsPasswordValid(passwordIsValid);
+
+    if (!passwordIsValid) {
+      setError("Password must be at least 8 characters long.");
+      return;
+    }
+
     try {
       const response = await axios.post('http://localhost:5000/api/users/add', {
         username,
@@ -25,6 +35,14 @@ function SignupForm() {
       setError('Registration failed. Please try again.');
       console.error('Registration error:', error);
     }
+  };
+
+  const handlePasswordChange = (e) => {
+    const value = e.target.value;
+    setPassword(value);
+
+    // Update password validation
+    setIsPasswordValid(value.length >= 8);
   };
 
   return (
@@ -67,17 +85,20 @@ function SignupForm() {
             <input
               type="password"
               id="password"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className={`w-full px-3 py-2 border ${isPasswordValid ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500`}
               placeholder="Create a password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
               required
             />
+            {!isPasswordValid && (
+              <p className="text-red-500 text-sm mt-1">Password must be at least 8 characters long.</p>
+            )}
           </div>
           {error && <p className="text-red-500 text-center">{error}</p>}
           <button
             type="submit"
-            className="w-full bg-indigo-500 text-white font-bold py-2 rounded-md hover:bg-indigo-600 transition duration-200"
+            className="w-full bg-purple-500 text-white font-bold py-2 rounded-md hover:bg-indigo-600 transition duration-200"
           >
             Register
           </button>

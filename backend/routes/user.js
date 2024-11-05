@@ -1,5 +1,5 @@
 import express from 'express';
-import { createUser, deleteUser, getUserByType, getUserRole, getUsers, loginUser, updateUser } from '../controllers/users.js';
+import { createUser, deleteUser, get_image, getUserByType, getUserRole, getUsers, loginUser, updateUser } from '../controllers/users.js';
 import { authenticate, authorize } from '../middleware/auth.js';
 import User from '../models/user.js';
 
@@ -26,6 +26,8 @@ router.delete("/:id", deleteUser)
 router.put('/:id', updateUser);
 
 router.get("/type/:type", getUserByType);
+
+router.get("/get_image/uploads/:id", get_image);
 
 
 

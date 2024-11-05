@@ -51,10 +51,6 @@ function IncidentDetail() {
         incidentId: id,
         officerUsername: selectedOfficer,
         priority,
-        // typeOfIncident: incident.typeOfIncident,
-        // description: incident.description,
-        // location: incident.location,
-        // date: incident.date,
         status
       };
 
@@ -117,11 +113,11 @@ function IncidentDetail() {
             <td className="border p-2 font-semibold bg-gray-100">Evidence</td>
             <td className="border p-2">
               {incident.evidence ? (
-                <img 
-                  src={`http://localhost:5000/uploads/${incident.evidence}`} 
-                  alt="Evidence" 
-                  className="w-32 h-auto rounded-md"
-                />
+               <img 
+               src={`http://localhost:5000/api/users/get_image/${incident.evidence}`} // Adjust the path as necessary
+               alt="Evidence" 
+               className="w-32 h-auto rounded-md" // Adjust size as needed
+             />
               ) : (
                 <span>No evidence available</span>
               )}
@@ -133,7 +129,7 @@ function IncidentDetail() {
       {/* Button to open modal */}
       <button 
         onClick={() => setShowModal(true)} 
-        className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+        className="bg-purple-500 text-white px-4 py-2 rounded mb-4"
       >
         Assign to Officer
       </button>
@@ -178,7 +174,7 @@ function IncidentDetail() {
             <div className="flex justify-end mt-4">
               <button 
                 onClick={handleAssign} 
-                className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                className="bg-purple-500 text-white px-4 py-2 rounded mr-2"
               >
                 Assign
               </button>

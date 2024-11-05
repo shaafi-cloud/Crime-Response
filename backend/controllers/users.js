@@ -1,5 +1,11 @@
 import User from "../models/user.js";
 import jwt from 'jsonwebtoken';
+import fs from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const _dirname = path.dirname(__filename);
+
 
 export const createUser = async (req, res) => {
     const { username, email, password, type } = req.body; // Include type here
@@ -127,4 +133,23 @@ export const updateUser = async (req, res) => {
         res.status(500).json({message: "Server error"});
         
     }
+  };
+
+
+  export const get_image = async (req, res) => {
+    const { id } = req.params; // Extract image name from the request
+    const filePath = path.resolve('uploads', id); // Construct the full path to the image from the project root
+  
+    // console.log("The image ID is: ", id);
+    // console.log("The file path is: ", filePath);
+  
+    // Check if the file exists
+    fs.access(filePath, fs.constants.F_OK, (err) => {
+      if (err) {
+        return res.status(404).json({ message: 'Image not found' });
+      }
+  
+      // Send the image file
+      res.sendFile(filePath);
+    });
   };
