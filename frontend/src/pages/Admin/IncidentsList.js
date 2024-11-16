@@ -73,8 +73,8 @@ function IncidentsList() {
         <option value="desc">Descending</option>
       </select>
 
-      <table className="w-full border-collapse">
-        <thead>
+      <table className="w-full border-collapse rounded-lg overflow-hidden">
+        <thead className="bg-purple-500 text-white">
           <tr>
             <th className="border-b p-2 text-left">ID</th>
             <th className="border-b p-2 text-left">Type of Incident</th>

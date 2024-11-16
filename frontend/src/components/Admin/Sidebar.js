@@ -16,7 +16,7 @@ function AdminSidebar({ onLogout }) {
   // };
 
   return (
-    <aside className="w-64 bg-white text-gray-600 font-sans">
+    <aside className="w-64 bg-gray-200 text-gray-600 font-sans">
       <div className="flex items-center justify-center mt-8 mb-4 mr-11">
         <div className="text-xl font-bold text-purple-700 ">Admin Dashboard</div>
       </div>

@@ -101,7 +101,7 @@ const Users = () => {
             >
               <option value="">All Roles</option>
               <option value="admin">Admin</option>
-              <option value="officer">Officer</option>
+              <option value="Officer">Officer</option>
               <option value="user">User</option>
             </select>
             <input
@@ -113,8 +113,8 @@ const Users = () => {
             />
           </div>
 
-          <table className="w-full border-collapse mb-4">
-            <thead>
+          <table className="w-full border-collapse mb-4 rounded-lg overflow-hidden">
+            <thead className='bg-purple-500 text-white'>
               <tr>
                 <th className="border-b p-2 text-left">ID</th>
                 <th className="border-b p-2 text-left">Name</th>

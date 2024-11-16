@@ -56,17 +56,14 @@ export const deleteUser = async (req, res)=> {
 
 export const loginUser = async (req, res) => {
     const { username, password } = req.body;
-    console.log("the login user:-----------------", req.body);
     try {
         // Find user by username
         const user = await User.findOne({ username });
 
-        // Check if user exists and the password matches
-        if (!user || user.password !== password) {  // Plain text comparison
+        if (!user || user.password !== password) { 
             return res.status(401).json({ error: "Invalid credentials" });
         }
 
-        // Generate a JWT token with the user's ID and type
         const token = jwt.sign({ id: user._id, type: user.type }, 'ourpro123', { expiresIn: '2h' });
 
         // Send the token and role as response

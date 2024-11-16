@@ -17,10 +17,6 @@ export const assignIncident = async (req, res) => {
             officerUsername,
             officerId: officer._id,
             priority,
-            // typeOfIncident,
-            // description,
-            // location,
-            // date,
             status,
         });
     
@@ -33,6 +29,7 @@ export const assignIncident = async (req, res) => {
 
 export const getAllassigned = async (req, res) => {
     const { username } = req.params;
+
  
     try {
         const officer = await User.findOne({_id: username });
@@ -49,4 +46,21 @@ export const getAllassigned = async (req, res) => {
       } catch (error) {
         res.status(500).json({ error: error.message });
       }
+};
+
+
+
+export const getAssignedById = async (req, res) => {
+  try {
+    console.log("the params is: ", req.params);
+    // Populate incidentId to get full incident details
+    const incidents = await Incident.findOne({_id: req.params.id});
+    if (!incidents) {
+      return res.status(404).json({ message: "Incident not found" });
+    } 
+      console.log("the data: ", incidents);
+    res.json({ data: incidents });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch incident details" });
+  }
 };

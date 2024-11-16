@@ -7,7 +7,7 @@ import { FaUserFriends, FaListAlt, FaSignOutAlt } from 'react-icons/fa';
 
 function OfficerSidebar({onLogout}) {
   return (
-    <aside className="w-64 bg-white text-gray-600 font-sans">
+    <aside className="w-64 bg-gray-200 text-gray-600 font-sans">
       <div className="flex items-center justify-center mt-8 mb-4">
         <div className="text-xl font-bold text-purple-700">Officer Dashboard</div>
       </div>
@@ -24,7 +24,7 @@ function OfficerSidebar({onLogout}) {
               Assigned Incidents
             </NavLink>
           </li>
-          <li className="mb-4">
+          {/* <li className="mb-4">
             <NavLink
               to="/progress"
               className={({ isActive }) =>
@@ -34,7 +34,7 @@ function OfficerSidebar({onLogout}) {
               <TbProgressDown className="mr-2 text-xl" />
               Progress Incidents
             </NavLink>
-          </li>
+          </li> */}
 
           <li className="mb-4">
             <NavLink

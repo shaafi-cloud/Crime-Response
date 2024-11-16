@@ -165,4 +165,4 @@ export const getIncidntbyId = async (req, res) => {
 
   export const assignIncident = async (req, res) => {
     
-  }
+  };

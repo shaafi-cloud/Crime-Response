@@ -5,24 +5,20 @@ import { AuthContext, AuthProvider } from '../../context/authContex';
 import axios from 'axios';
 
 function OfficerDashboard() {
-  const  user  = useContext(AuthProvider); // Get user data from context
-  console.log("user---------", localStorage.getItem('user_id'))
-  const username =localStorage.getItem('user_id'); // Retrieve username from user context
+  const user = useContext(AuthProvider); // Get user data from context
+  const username = localStorage.getItem('user_id'); // Retrieve username from user context
 
+  console.log("username is: ", username);
   const [assignedIncidents, setAssignedIncidents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchAssignedIncidents = async () => {
-      // if (!username) return; // Ensure username is available before making API call
-      
-      console.log("Username", username)
       try {
         const response = await axios.get(`http://localhost:5000/api/incident/assign/${username}`);
+        console.log("API response data:", response.data); // Debug statement to see the structure
         setAssignedIncidents(response.data.data);
-        console.log("Our data is: ", response.data);
-        console.log("Username", username)
       } catch (error) {
         console.error("Failed to fetch assigned incidents:", error);
         setError("Failed to fetch assigned incidents. Please try again later.");
@@ -32,10 +28,10 @@ function OfficerDashboard() {
     };
 
     fetchAssignedIncidents();
-  }, []); // Run effect whenever username changes
+  }, [username]);
 
-  // if (loading) return <div>Loading...</div>;
-  // if (error) return <div className="text-red-500">{error}</div>;
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
     <div className="p-6 bg-white shadow-md rounded-md">
@@ -54,15 +50,21 @@ function OfficerDashboard() {
           {assignedIncidents.map((incident) => (
             <tr key={incident._id}>
               <td className="border-b p-2">{incident._id}</td>
-              <td className="border-b p-2">{incident.incidentId.typeOfIncident}</td>
+              <td className="border-b p-2">{incident.incidentId?.typeOfIncident}</td> {/* Safe check for typeOfIncident */}
               <td className="border-b p-2">{incident.status}</td>
               <td className="border-b p-2">{incident.priority}</td>
               <td className="border-b p-2">
-                <Link to={`/officer/incidents/${incident.incidentId._id}`} className="text-blue-500">
-                  View Details
-                </Link>
+                {incident.incidentId?._id ? ( // Conditional rendering for Link if incidentId exists
+                  <Link to={`/officer/incidents/${incident.incidentId._id}`} className="text-blue-500">
+                    View Details
+                  </Link>
+                  
+                ) : (
+                  <span>No Details Available</span>
+                )}
               </td>
             </tr>
+        
           ))}
         </tbody>
       </table>

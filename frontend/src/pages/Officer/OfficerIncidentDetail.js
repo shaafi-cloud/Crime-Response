@@ -1,20 +1,40 @@
-// src/pages/Officer/OfficerIncidentDetail.js
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import axios from 'axios';
+import { AuthProvider } from '../../context/authContex';
 
 function OfficerIncidentDetail() {
-  const { id } = useParams();
+  const { id } = useParams(); // Get the assigned incident ID from the URL
+  const [incidentData, setIncidentData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    const officerIncidents = [
-      { id: 1, type: 'Theft', status: 'Pending', priority: 'Medium' },
-      { id: 2, type: 'Assault', status: 'Pending', priority: 'Low' },
-      { id: 3, type: 'Rape', status: 'Pending', priority: 'High' },
-  ];
-  const incident = officerIncidents.find((item) => item.id === parseInt(id));
 
-  if (!incident) {
-    return <p>Incident not found</p>;
-  }
+
+  useEffect(() => {
+    console.log("The id: ", id);
+    const fetchIncidentDetails = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/incident/assign/detail/${id}`);
+        setIncidentData(response.data.data);
+        console.log("The data: ", response.data.data);
+        console.log("The id: ", id);
+      } catch (err) {
+        console.log("The error: ", err);
+        setError("Failed to load incident details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchIncidentDetails();
+  }, [id]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
+  if (!incidentData) return <p>Incident data not available</p>;
+
+  const { incidentId } = incidentData; // Access the populated incident details
 
   return (
     <div className="p-6 bg-white shadow-md rounded-md">
@@ -23,73 +43,55 @@ function OfficerIncidentDetail() {
         <tbody>
           <tr>
             <td className="border px-4 py-2 font-semibold">ID</td>
-            <td className="border px-4 py-2">{incident.id}</td>
+            <td className="border px-4 py-2">{incidentData._id}</td>
           </tr>
           <tr>
             <td className="border px-4 py-2 font-semibold">Type</td>
-            <td className="border px-4 py-2">{incident.type}</td>
+            <td className="border px-4 py-2">{incidentData?.typeOfIncident}</td>
           </tr>
           <tr>
             <td className="border px-4 py-2 font-semibold">Status</td>
-            <td className="border px-4 py-2">
-              <select className="border rounded p-1">
-                <option value="Pending">Pending</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Resolved">Resolved</option>
-              </select>
-            </td>
+            <td className="border px-4 py-2">{incidentData?.status}</td>
           </tr>
-          <tr>
+          {/* <tr>
             <td className="border px-4 py-2 font-semibold">Priority</td>
-            <td className="border px-4 py-2">{incident.priority}</td>
-          </tr>
+            <td className="border px-4 py-2">{incidentData?.priority}</td>
+          </tr> */}
           <tr>
             <td className="border px-4 py-2 font-semibold">Description</td>
-            <td className="border px-4 py-2">Details about the theft incident...</td>
+            <td className="border px-4 py-2">{incidentData?.description}</td>
           </tr>
           <tr>
             <td className="border px-4 py-2 font-semibold">Location</td>
-            <td className="border px-4 py-2">{incident.location}</td>
+            <td className="border px-4 py-2">{incidentData?.location}</td>
           </tr>
           <tr>
             <td className="border px-4 py-2 font-semibold">Date</td>
-            <td className="border px-4 py-2">2024-10-31</td>
+            <td className="border px-4 py-2">{incidentData?.date ? new Date(incidentData.date).toLocaleDateString() : "N/A"}</td>
           </tr>
-          {/* <tr>
-            <td className="border px-4 py-2 font-semibold">Admin Notes</td>
-            <td className="border px-4 py-2">Check for CCTV footage.</td>
-          </tr> */}
+          <tr>
+          <td className="border p-2 font-semibold bg-gray-100">Evidence</td>
+            <td className="border p-2">
+              {incidentData.evidence ? (
+               <img 
+               src={`http://localhost:5000/api/users/get_image/${incidentData.evidence}`} // Adjust the path as necessary
+               alt="Evidence" 
+               className="w-32 h-auto rounded-md" // Adjust size as needed
+             />
+              ) : (
+                <span>No evidence available</span>
+              )}
+            </td>
+          </tr>
         </tbody>
       </table>
-
-      <div>
-        <label className="font-semibold block mb-2">Officer's Notes</label>
-        <textarea
-          className="border p-2 w-full rounded"
-          placeholder="Add your notes here..."
-          rows="4"
-        ></textarea>
-      </div>
-
       <div className="flex items-center justify-between mt-6">
-        {/* Back to Dashboard with Arrow Icon */}
-        <Link to="/officer" className="text-blue-500 flex items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 mr-1"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
+        <Link to="/officer/incidents" className="text-blue-500 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
           </svg>
           Back to Dashboard
         </Link>
-
-        {/* Update Status & Notes Button on the Left */}
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-xl">
-          Submit
-        </button>
       </div>
     </div>
   );
